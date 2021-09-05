@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const axios = require('axios');
 
 
-module.exports = { test, handlegetalldata, handleadduserdata, handledeletedata,update }
+module.exports = { test, handlegetalldata, handleadduserdata, handledeletedata,update,handlegetuserdata }
 
 
 const photoSchema = new mongoose.Schema({
@@ -26,16 +26,18 @@ function test(req, res) {
 
 async function handlegetalldata(req, res) {
     let search = req.query.search
-    // let email = req.query.email
+    let email = req.query.email
     console.log(search)
+    let arr=[]
     try {
         let resp = await axios.get(`https://api.unsplash.com/search/photos?client_id=FwcJO2PQq4JjqT2VbrdGhPM7bx6y3YbXG42A0Dw65Xg&query=${search}`);
         resp.data.results.map((value, index) => {
-            let myCar = new Photo(value.tags[0].title, value.urls.thumb, value.alt_description, value.id, '');
+            let myCar = new Photo(value.tags[0].title, value.urls.thumb, value.alt_description, value.id, `${email}`);
             console.log(myCar);
+            arr.push(myCar)
         })
 
-        res.send(resp.data.results);
+        res.send(arr);
     } catch (err) {
         // Handle Error Here
         console.error(err);
@@ -63,9 +65,16 @@ async function handleadduserdata(req, res, next) {
     })
 
 }
-
+function handlegetuserdata (req,res,next){
+    let email=req.query.email
+    photomodel.find({email:email}).then(function(photomodel){
+        
+        res.send(photomodel);
+    }).catch(next);
+  }
 
 async function handledeletedata(req, res) {
+    // let { title, thumb, alt_description, email } = req.body;
     let email = req.query.email
     await photomodel.findOneAndDelete({ _id: req.params.id }).then(function (photomodel) {
         // res.send(photomodel);

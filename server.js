@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 // mongoose.connect('mongodb://localhost:27017/myapp');
 mongoose.connect('mongodb://maiadadb:0000@cluster0-shard-00-00.ii9w9.mongodb.net:27017,cluster0-shard-00-01.ii9w9.mongodb.net:27017,cluster0-shard-00-02.ii9w9.mongodb.net:27017/photodatabase?ssl=true&replicaSet=atlas-114hrc-shard-0&authSource=admin&retryWrites=true&w=majority');
 const PORT = process.env.PORT ;
-const{test,handlegetalldata,handleadduserdata,handledeletedata,update}=require('./comp/helper')
+const{test,handlegetalldata,handleadduserdata,handledeletedata,update,handlegetuserdata}=require('./comp/helper')
 
 
 
@@ -20,10 +20,7 @@ server.get("/getalldata", handlegetalldata);
 server.post("/adduserdata", handleadduserdata);
 server.delete('/deletedata/:id', handledeletedata);
 server.put('/update/:id',update)
-
-
-
-
+server.get('/getuserdata',handlegetuserdata)
   
 
 
